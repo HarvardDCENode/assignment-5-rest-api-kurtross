@@ -1,0 +1,42 @@
+doctype html
+html
+  head
+    title Photo Sharing Application
+  body
+    h1 My Ultra-modern Photo Sharing Application
+
+    // Display flash messages (if any)
+    if flashMsg
+      p(style="color: red") #{flashMsg}
+
+    // Form to upload a new photo
+    h2 Upload a New Photo
+    form(action="/photos", method="post", enctype="multipart/form-data")
+      label(for="image") Choose an image:
+      input(type="file", id="image", name="image" required)
+      br
+      label(for="description") Description:
+      input(type="text", id="description", name="description")
+      br
+      label(for="date") Date:
+      input(type="date", id="date", name="date")
+      br
+      button(type="submit") Upload
+
+    // Display the list of photos
+    h2 Photo List
+    if photos.length
+      each photo in photos
+        div
+          img(src=photo.imageurl, alt=photo.name, width="200")
+          p Name: #{photo.name}
+          p Description: #{photo.description}
+          p Date: #{photo.date}
+          // Edit button
+          form(action=`/photos/edit/${photo._id}`, method="get")
+            button(type="submit") Edit
+          // Delete button
+          form(action=`/photos/delete/${photo._id}`, method="post")
+            button(type="submit") Delete
+    else
+      p No photos available. Upload some bro.
