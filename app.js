@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var flash = require('connect-flash');
+const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -37,6 +38,10 @@ app.use(session({
 
 // Add flash middleware
 app.use(flash());
+
+// enabling cors middleware
+app.use(cors());
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
