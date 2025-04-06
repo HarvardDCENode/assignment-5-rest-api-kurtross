@@ -28,15 +28,17 @@ Your application should provide an REST interface that lets user(s) manage infor
 Your application must provide a REST API for all four CRUD operations for managing your data. It may provide an HTML interface as well - there's no need to remove it from your application. Just be sure that all four CRUD operations can be done via the REST API. 
 Your application should not use GET requests to do Update or Delete operations.   
 
+Database access should be provided by a service class that can provide services to both the REST API and Web/HTML routes. In other words, don't have mongoose methods such as find() and save() repeated in multiple different router js files.
+
+Your application must use MongoDB (Atlas is recommended) to store data. Using Mongoose is recommended.
+
 ^^^I think this is done so far
 
-Database access should be provided by a service class that can provide services to both the REST API and Web/HTML routes. In other words, don't have mongoose methods such as find() and save() repeated in multiple different router js files.
 Your REST API should respond appropriately to preflights, and all responses should have the correct mimetype and CORS headers set. Be sure to test your API from client-side code in the browser. 
-Your application must use MongoDB (Atlas is recommended) to store data. Using Mongoose is recommended.
-You should provide a working client-side test file that demonstrates that all the APIs are working. Be sure to document how to run the test so that your grading TA can run it. We provide a sample in the course github repo, and walk though it in Video 9.5.
+
+You should provide a working client-side test file that demonstrates that all the APIs are working. 
+
+Be sure to document how to run the test so that your grading TA can run it. We provide a sample in the course github repo, and walk though it in Video 9.5.
 Submission
-You should check your code into the project on github, and deploy and run your code on DO
-Your submission to Canvas should include the URLs to your app running on DO and your github repo.
-If your application requires explanation, provide this in the project's readme.md file.
-Original Work
-Remember to adhere to Harvard Extension School's academic standards, particularly with respect to plagiarism.
+
+You should check your code into the project on github, and deploy and run your code on DO.

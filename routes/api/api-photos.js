@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var photoController = require('../../controllers/photoController');
-var Photo = require('../../models/photoModel');
-const mongoose = require('mongoose');
+var PhotoService = require('../../services/photoService');
 
 // API routing
 
 // read all photos
 router.get('/', (req, res, next) => {
-    Photo.find({})
+    console.log("GET /api/photos route hit");
+    PhotoService.getAllPhotos()
         .then((photos) => {
-            res.status(200).json(photos); // Return photos as JSON
+            console.log("Photos retrieved:", photos);
+            res.status(200).json(photos);
         })
         .catch((err) => {
             console.error("Error retrieving photos:", err);
@@ -20,12 +21,12 @@ router.get('/', (req, res, next) => {
 
 // read photo by id
 router.get('/:id', (req, res, next) => {
-    Photo.findById(req.params.id)
+    PhotoService.getPhotoById(req.params.id)
         .then((photo) => {
             if (!photo) {
                 return res.status(404).json({ error: "Photo not found" });
             }
-            res.status(200).json(photo); // Return the photo as JSON
+            res.status(200).json(photo);
         })
         .catch((err) => {
             console.error("Error retrieving photo:", err);
@@ -35,18 +36,18 @@ router.get('/:id', (req, res, next) => {
 
 // create a new photo
 router.post('/', (req, res, next) => {
-    const photo = new Photo({
+    const photoData = {
         name: req.body.name,
         description: req.body.description,
         date: req.body.date,
-        imageurl: req.body.imageurl, // Assuming the image URL is sent in the request body
+        imageurl: req.body.imageurl, 
         mimetype: req.body.mimetype,
         size: req.body.size
-    });
+    };
 
-    photo.save()
+    PhotoService.createPhoto(photoData)
         .then((savedPhoto) => {
-            res.status(201).json(savedPhoto); // Return the saved photo as JSON
+            res.status(201).json(savedPhoto);
         })
         .catch((err) => {
             console.error("Error saving photo:", err);
@@ -56,12 +57,12 @@ router.post('/', (req, res, next) => {
 
 // update a photo by ID
 router.put('/:id', (req, res, next) => {
-    Photo.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    PhotoService.updatePhotoById(req.params.id, req.body)
         .then((updatedPhoto) => {
             if (!updatedPhoto) {
                 return res.status(404).json({ error: "photo not found" });
             }
-            res.status(200).json(updatedPhoto); // Return the updated photo as JSON
+            res.status(200).json(updatedPhoto);
         })
         .catch((err) => {
             console.error("Error updating photo:", err);
@@ -71,7 +72,7 @@ router.put('/:id', (req, res, next) => {
 
 // delete a photo by ID
 router.delete('/:id', (req, res, next) => {
-    Photo.findByIdAndDelete(req.params.id)
+    PhotoService.deletePhotoById(req.params.id)
         .then((deletedPhoto) => {
             if (!deletedPhoto) {
                 return res.status(404).json({ error: "Photo not found" });

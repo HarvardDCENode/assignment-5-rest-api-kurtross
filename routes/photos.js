@@ -3,8 +3,7 @@ var router = express.Router();
 var flash = require('express-flash');
 var multer = require('multer');
 var photoController = require('../controllers/photoController');
-var Photo = require('../models/photoModel');
-const mongoose = require('mongoose');
+var PhotoService = require('../services/photoService');
 
 var upload = multer({
     storage: photoController.storage,
@@ -15,7 +14,7 @@ var upload = multer({
 router.use(flash());
 
 router.get('/', (req, res, next) => {
-    Photo.find({})
+    PhotoService.getAllPhotos()
         .then((photos) => {
             console.log("Photos retrieved:", photos);
             res.render('photos', {
@@ -36,7 +35,7 @@ router.post('/', upload.single('image'), (req, res, next) => {
     }
 
     var path = "/static/img/" + req.file.filename;
-    var photo = {
+    var photoData = {
         name: req.file.originalname,
         mimetype: req.file.mimetype,
         imageurl: path,
@@ -44,8 +43,8 @@ router.post('/', upload.single('image'), (req, res, next) => {
         description: req.body.description,
         date: req.body.date
     };
-    var photo = new Photo(photo);
-    photo.save()
+
+    PhotoService.createPhoto(photoData)
         .then(() => {
             res.redirect('/photos');
         })
@@ -57,7 +56,7 @@ router.post('/', upload.single('image'), (req, res, next) => {
 
 // get form to update a photo
 router.get('/edit/:id', (req, res, next) => {
-    Photo.findById(req.params.id)
+    PhotoService.getPhotoById(req.params.id)
         .then((photo) => {
             if (!photo) {
                 req.flash('fileUploadError', 'Photo not found');
@@ -73,7 +72,7 @@ router.get('/edit/:id', (req, res, next) => {
 
 // post updated photo data
 router.post('/edit/:id', (req, res, next) => {
-    Photo.findByIdAndUpdate(req.params.id, {
+    PhotoService.updatePhotoById(req.params.id, {
         name: req.body.name,
         description: req.body.description,
         date: req.body.date
@@ -90,7 +89,7 @@ router.post('/edit/:id', (req, res, next) => {
 
 // post to delete a photo
 router.post('/delete/:id', (req, res, next) => {
-    Photo.findByIdAndDelete(req.params.id)
+    PhotoService.deletePhotoById(req.params.id)
         .then(() => {
             res.redirect('/photos');
         })
@@ -113,6 +112,5 @@ router.use(function(err, req, res, next) {
         next(err);
     }
 });
-
 
 module.exports = router;

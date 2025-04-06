@@ -4,10 +4,10 @@ const path = require('path');
 // storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/static/img'); // Directory to save the uploaded files
+        cb(null, 'public/static/img');
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)); // Naming convention for the files
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 

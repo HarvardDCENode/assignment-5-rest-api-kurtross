@@ -38,12 +38,6 @@ app.use(session({
 // Add flash middleware
 app.use(flash());
 
-//debiugging middldeare thing (remove later)
-app.use((req, res, next) => {
-    console.log(`Incoming request: ${req.method} ${req.url}`);
-    next();
-});
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/photos', photosRouter);
