@@ -1,3 +1,7 @@
+The client-side api test html file can be found at public/apiTestForm.html
+
+
+
 # Assignment #5 - REST APIs
 This assignment is designed to let you demonstrate your knowledge of building a REST API.
 

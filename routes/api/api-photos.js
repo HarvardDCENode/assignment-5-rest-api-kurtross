@@ -3,6 +3,28 @@ var router = express.Router();
 var photoController = require('../../controllers/photoController');
 var PhotoService = require('../../services/photoService');
 
+const multer = require('multer');
+
+// configure multer to put photos in static folder
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/static/img');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+router.use((req, res, next) => {
+    res.set({
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+    });
+    next();
+});
+
 // API routing
 
 // read all photos
@@ -35,14 +57,14 @@ router.get('/:id', (req, res, next) => {
 });
 
 // create a new photo
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('image'), (req, res, next) => {
     const photoData = {
         name: req.body.name,
         description: req.body.description,
         date: req.body.date,
-        imageurl: req.body.imageurl, 
-        mimetype: req.body.mimetype,
-        size: req.body.size
+        imageurl: `/static/img/${req.file.filename}`,
+        mimetype: req.file.mimetype,
+        size: req.file.size
     };
 
     PhotoService.createPhoto(photoData)
